@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/Screens/Home.dart';
 
 class Onboarding extends StatelessWidget {
   const Onboarding({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Get screen width and height
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     // Static weather information (e.g., temperature, high and low temperatures)
     String mainTemperature = '23°';
     String highTemperature = '28°C';
@@ -40,7 +45,7 @@ class Onboarding extends StatelessWidget {
           ),
           // Display weather information at the top, centered
           Positioned(
-            top: 150, // Adjust the top position as needed
+            top: screenHeight * 0.18, // Adjust top position based on screen height
             left: 0,
             right: 0,
             child: Column(
@@ -53,20 +58,20 @@ class Onboarding extends StatelessWidget {
                     Icon(
                       weatherIcon,
                       color: Colors.yellow,
-                      size: 24, // Small icon size
+                      size: screenWidth * 0.08, // Responsive icon size
                     ),
-                    const SizedBox(width: 8), // Space between icon and description
+                    SizedBox(width: screenWidth * 0.02), // Responsive spacing
                     Text(
                       weatherDescription,
-                      style: const TextStyle(
-                        fontSize: 20,
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.06, // Responsive font size
                         color: Colors.white,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10), // Space between icon/description and temperature
+                SizedBox(height: screenHeight * 0.02), // Responsive spacing
                 // Weather Temperature
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -74,30 +79,30 @@ class Onboarding extends StatelessWidget {
                   children: [
                     Text(
                       mainTemperature,
-                      style: const TextStyle(
-                        fontSize: 96,
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.3, // Responsive font size for main temperature
                         color: Colors.white,
-                        fontWeight: FontWeight.w200, // Thinner font weight for main temperature
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: screenWidth * 0.02),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
                           highTemperature,
-                          style: const TextStyle(
-                            fontSize: 18,
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.05, // Responsive font size for high temperature
                             color: Colors.white70,
-                            fontWeight: FontWeight.w300, // Adjusted font weight for high temperature
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                         Text(
                           lowTemperature,
-                          style: const TextStyle(
-                            fontSize: 18,
+                          style: TextStyle(
+                            fontSize: screenWidth * 0.05, // Responsive font size for low temperature
                             color: Colors.white70,
-                            fontWeight: FontWeight.w300, // Adjusted font weight for low temperature
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
@@ -109,29 +114,35 @@ class Onboarding extends StatelessWidget {
           ),
           // Overlay content at the bottom
           Positioned(
-            bottom: 150, // Distance from the bottom of the screen
+            bottom: screenHeight * 0.1, // Responsive distance from the bottom
             left: 0,
             right: 0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
+                Text(
                   'Welcome to the App!',
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: screenWidth * 0.06, // Responsive font size
                     fontWeight: FontWeight.bold,
-                    color: Colors.white, // Text color for contrast
+                    color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 20),
+                SizedBox(height: screenHeight * 0.02), // Responsive spacing
                 ElevatedButton(
                   onPressed: () {
-                    // Navigate to the next screen
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Home()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black, // Dark button color
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    textStyle: const TextStyle(fontSize: 16),
+                    backgroundColor: Colors.black,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: screenWidth * 0.1, // Responsive horizontal padding
+                      vertical: screenHeight * 0.02, // Responsive vertical padding
+                    ),
+                    textStyle: TextStyle(fontSize: screenWidth * 0.045),
                     elevation: 8, // Adds a shadow effect
                     shadowColor: Colors.white.withOpacity(0.5), // Shadow color
                     shape: RoundedRectangleBorder(
