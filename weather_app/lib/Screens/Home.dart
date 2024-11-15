@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_app/Components/NavBar.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -212,6 +213,7 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
+      bottomNavigationBar: const NavBar(),
     );
   }
 
