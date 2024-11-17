@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/Components/NavBar.dart';
 
+import '../Components/SearchBar.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -11,6 +13,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
+  String searchQuery = "";
 
   @override
   void initState() {
@@ -43,6 +46,13 @@ class _HomeState extends State<Home> {
       int slotHour = int.parse(time.split(":")[0]);
       return (slotHour == currentHour || slotHour == currentHour - 1);
     });
+  }
+
+  void _handleSearch(String query) {
+    setState(() {
+      searchQuery = query; // Update the query
+    });
+    print("Search query: $query"); // Handle search logic here
   }
 
   @override
@@ -83,6 +93,8 @@ class _HomeState extends State<Home> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            CustomSearchBar(onSearch: _handleSearch), // Add the search bar here
+            const SizedBox(height: 20), // Spacing after the search bar
             Center(
               child: Column(
                 children: [
