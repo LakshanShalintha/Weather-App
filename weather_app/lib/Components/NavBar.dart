@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/Screens/Home.dart';
+import 'package:weather_app/Screens/Profile.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key});
@@ -42,10 +43,10 @@ class _NavBarState extends State<NavBar> {
         );*/
         break;
       case 4:
-        /*Navigator.pushReplacement(
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => ),
-        );*/
+          MaterialPageRoute(builder: (context) => const Profile()),
+        );
         break;
     }
   }
