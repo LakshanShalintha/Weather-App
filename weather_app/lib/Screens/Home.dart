@@ -13,7 +13,8 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final ScrollController _scrollController = ScrollController();
   String searchQuery = "";
-  bool _isSearchVisible = false; // State variable for search bar visibility
+  bool _isSearchVisible = false;
+  String _selectedButton = "Today";
 
   @override
   void initState() {
@@ -127,12 +128,23 @@ class _HomeState extends State<Home> {
               Center(
                 child: Column(
                   children: [
-                    const Text(
-                      "Nochchiyagama",
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 18,
-                      ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.location_on, // Location icon
+                          color: Colors.white70, // Match text color
+                          size: 20, // Icon size
+                        ),
+                        SizedBox(width: 5), // Spacing between the icon and the text
+                        Text(
+                          "Nochchiyagama",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 10),
                     Container(
@@ -203,6 +215,7 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
+
               const SizedBox(height: 20),
               Center(
                 child: Column(
@@ -234,22 +247,18 @@ class _HomeState extends State<Home> {
                 ),
               ),
               const SizedBox(height: 20),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(
-                      "Today",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                    Text(
-                      "Next 7 Days",
-                      style: TextStyle(color: Colors.blue, fontSize: 16),
-                    ),
+                    _buildWeatherButton("Today"),
+                    _buildWeatherButton("Tomorrow"),
+                    _buildWeatherButton("7 Days"),
                   ],
                 ),
               ),
+
               const SizedBox(height: 10),
               SizedBox(
                 height: 120,
@@ -324,6 +333,32 @@ class _HomeState extends State<Home> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  // Method to build each weather button
+  Widget _buildWeatherButton(String label) {
+    return SizedBox(
+      width: 110,
+      child: ElevatedButton(
+        onPressed: () {
+          setState(() {
+            _selectedButton = label; // Update selected button
+          });
+          print("$label button clicked");
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _selectedButton == label
+              ? const Color(0xFF4F4F50)
+              : const Color(0xFF1F1F1F), // Red if selected, gray otherwise
+          foregroundColor: Colors.white, // White text color
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+        ),
+        child: Text(label),
       ),
     );
   }
