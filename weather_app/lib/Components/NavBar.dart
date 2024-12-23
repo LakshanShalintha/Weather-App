@@ -31,18 +31,6 @@ class _NavBarState extends State<NavBar> {
         );*/
         break;
       case 2:
-        /*Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ),
-        );*/
-        break;
-      case 3:
-        /*Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => ),
-        );*/
-        break;
-      case 4:
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Profile()),
@@ -76,18 +64,10 @@ class _NavBarState extends State<NavBar> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.store),
-            label: 'Shop',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.add_box_rounded,
               size: 30.0,
             ),
-            label: 'Post',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article_outlined),
-            label: 'Blog',
+            label: 'Weather',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
