@@ -246,11 +246,11 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Spread buttons evenly
                   children: [
                     _buildWeatherButton("Today"),
                     _buildWeatherButton("Tomorrow"),
@@ -258,8 +258,7 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
-
-              const SizedBox(height: 10),
+              const SizedBox(height: 5),
               SizedBox(
                 height: 120,
                 child: ListView(
@@ -337,28 +336,31 @@ class _HomeState extends State<Home> {
     );
   }
 
-  // Method to build each weather button
+  // Updated _buildWeatherButton method
   Widget _buildWeatherButton(String label) {
-    return SizedBox(
-      width: 110,
-      child: ElevatedButton(
-        onPressed: () {
-          setState(() {
-            _selectedButton = label; // Update selected button
-          });
-          print("$label button clicked");
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: _selectedButton == label
-              ? const Color(0xFF4F4F50)
-              : const Color(0xFF1F1F1F), // Red if selected, gray otherwise
-          foregroundColor: Colors.white, // White text color
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4.0), // Add spacing between buttons
+        child: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _selectedButton = label; // Update selected button
+            });
+            print("$label button clicked");
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: _selectedButton == label
+                ? const Color(0xFF4F4F50)
+                : const Color(0xFF1F1F1F), // Red if selected, gray otherwise
+            foregroundColor: Colors.white, // White text color
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            minimumSize: const Size(0, 20),
+            padding: const EdgeInsets.symmetric(vertical: 5.0),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(label),
         ),
-        child: Text(label),
       ),
     );
   }
@@ -385,7 +387,9 @@ class _HomeState extends State<Home> {
               style: const TextStyle(
                   color: Colors.white,
                   fontSize: 14,
-                  fontWeight: FontWeight.bold)),
+                  fontWeight: FontWeight.bold
+              )
+          ),
         ],
       ),
     );
