@@ -1,16 +1,110 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/Screens/Onboarding.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io'; // To work with the image file
+
 import '../Components/NavBar.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
 
   @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  File? _image; // Store the image file
+  final ImagePicker _picker = ImagePicker();
+
+  // Form controllers
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
+
+  // Function to pick an image from the gallery
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path); // Update the image file
+      });
+    }
+  }
+
+  // Function to show the image in full screen
+  void _viewImage() {
+    if (_image != null) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => Scaffold(
+            backgroundColor: Colors.black,
+            appBar: AppBar(
+              backgroundColor: Colors.black,
+              title: const Text("Full Image"),
+            ),
+            body: Center(
+              child: Image.file(_image!),
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  // Function to show the popup menu
+  void _showImageOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.grey[900],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+      ),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.remove_red_eye, color: Colors.white),
+              title: const Text("View Image", style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pop(context); // Close the bottom sheet
+                _viewImage(); // Show the image in full screen
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.white),
+              title: const Text("Remove Image", style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pop(context); // Close the bottom sheet
+                setState(() {
+                  _image = null; // Remove the image
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Updated save function without error messages
+  void _saveForm() {
+    final name = _nameController.text;
+    final location = _locationController.text;
+
+    // Save the name and location without any validation
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Name: $name, Location: $location saved successfully!'),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context)
-            .unfocus(); // Dismiss the keyboard when tapping anywhere outside
+        FocusScope.of(context).unfocus(); // Dismiss the keyboard when tapping anywhere outside
       },
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -29,117 +123,125 @@ class Profile extends StatelessWidget {
           ),
           elevation: 0,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(25.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Column(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(screenWidth * 0.05), // Responsive padding
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Column(
+                    children: [
+                      Stack(
+                        clipBehavior: Clip.none, // Allows icon to overflow
+                        children: [
+                          GestureDetector(
+                            onTap: _showImageOptions, // Show options on tap
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 2),
+                              ),
+                              child: CircleAvatar(
+                                radius: screenWidth * 0.2, // Responsive image size
+                                backgroundColor: Colors.white70,
+                                backgroundImage: _image != null
+                                    ? FileImage(_image!) // Show the selected image
+                                    : null,
+                                child: _image == null // If no image is selected
+                                    ? const Icon(
+                                  Icons.person,
+                                  size: 50,
+                                  color: Colors.white,
+                                )
+                                    : null,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 5, // Position the camera icon below the circle
+                            right: 5, // Adjust the position horizontally
+                            child: GestureDetector(
+                              onTap: _pickImage,
+                              child: const Icon(
+                                Icons.camera_alt,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      child: const CircleAvatar(
-                        radius: 80,
-                        backgroundColor: Colors.white70,
+                      const SizedBox(height: 10), // Add some spacing
+                      const Text(
+                        "Lakshan", // Replace with the desired name
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10), // Add some spacing
-                    const Text(
-                      "Lakshan", // Replace with the desired name
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(height: 20),
+                      // Form Inputs
+                      TextField(
+                        controller: _nameController,
+                        style: const TextStyle(color: Colors.white, fontSize: 18), // Increased font size
+                        decoration: InputDecoration(
+                          labelText: "Name",
+                          labelStyle: const TextStyle(color: Colors.white, fontSize: 16), // Adjusted label font size
+                          filled: true,
+                          fillColor: Colors.grey[800],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15), // Adjusted padding
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 15),
+                      TextField(
+                        controller: _locationController,
+                        style: const TextStyle(color: Colors.white, fontSize: 18), // Increased font size
+                        decoration: InputDecoration(
+                          labelText: "Location",
+                          labelStyle: const TextStyle(color: Colors.white, fontSize: 16), // Adjusted label font size
+                          filled: true,
+                          fillColor: Colors.grey[800],
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15), // Adjusted padding
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Save Button
+                      SizedBox(
+                        width: screenWidth * 0.3, // Responsive width
+                        child: ElevatedButton(
+                          onPressed: _saveForm,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                            padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01), // Responsive vertical padding
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: const Text(
+                            "Save",
+                            style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildTextButton(context, "Profile", Icons.person, () {}),
-                  const SizedBox(height: 10),
-                  _buildTextButton(context, "Notification",
-                      Icons.notifications_active, () {}),
-                  const SizedBox(height: 10),
-                  _buildTextButton(context, "Setting", Icons.settings, () {}),
-                  const SizedBox(height: 10),
-                  _buildTextButton(context, "Log Out", Icons.logout, () {
-                    _showLogOutConfirmationDialog(context);
-                  }, color: Colors.red),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         bottomNavigationBar: const NavBar(),
       ),
-    );
-  }
-
-  // Helper function to build a text button with icon and arrow
-  Widget _buildTextButton(
-      BuildContext context, String label, IconData icon, VoidCallback onPressed,
-      {Color? color}) {
-    final isLogOut = label == "Log Out";
-    final defaultColor = isLogOut ? Colors.red : Colors.white;
-
-    return TextButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon, color: color ?? defaultColor),
-      label: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(fontSize: 18, color: color ?? defaultColor),
-          ),
-          Icon(Icons.arrow_forward_ios, size: 16, color: color ?? defaultColor),
-        ],
-      ),
-      style: TextButton.styleFrom(
-        alignment: Alignment.centerLeft,
-      ),
-    );
-  }
-
-  void _showLogOutConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirm Log Out'),
-          content: const Text('Are you sure you want to log out?'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'Log Out',
-                style: TextStyle(fontSize: 18, color: Colors.red),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Onboarding()),
-                );
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }
