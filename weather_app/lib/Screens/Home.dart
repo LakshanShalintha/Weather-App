@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/Components/NavBar.dart';
 import '../Components/SearchBar.dart';
+import 'Tomorrow.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -346,6 +347,13 @@ class _HomeState extends State<Home> {
             setState(() {
               _selectedButton = label; // Update selected button
             });
+
+            if (label == "Tomorrow") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Tomorrow()),
+              );
+            }
             print("$label button clicked");
           },
           style: ElevatedButton.styleFrom(
@@ -364,6 +372,7 @@ class _HomeState extends State<Home> {
       ),
     );
   }
+
 
   Widget _hourlyForecast(
       String time, String temp, IconData icon, bool showNow) {
