@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather_app/Components/NavBar.dart';
 import '../Components/SearchBar.dart';
+import '7days.dart';
 import 'Tomorrow.dart';
 
 class Home extends StatefulWidget {
@@ -353,14 +354,19 @@ class _HomeState extends State<Home> {
                 context,
                 MaterialPageRoute(builder: (context) => const Tomorrow()),
               );
+            } else if (label == "7 Days") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SevenDays()),
+              );
             }
             print("$label button clicked");
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: _selectedButton == label
                 ? const Color(0xFF4F4F50)
-                : const Color(0xFF1F1F1F), // Red if selected, gray otherwise
-            foregroundColor: Colors.white, // White text color
+                : const Color(0xFF1F1F1F), // Highlight selected button
+            foregroundColor: Colors.white, // Text color
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
