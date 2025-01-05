@@ -357,7 +357,7 @@ class _HomeState extends State<Home> {
             } else if (label == "7 Days") {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SevenDays()),
+                MaterialPageRoute(builder: (context) => const SevenDaysForecast()),
               );
             }
             print("$label button clicked");
